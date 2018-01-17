@@ -455,6 +455,8 @@ const {didMount, didUnmount} = (function getDidMountAndUnmount() {
 
       const {depth, offset, element} = selectItem(THREE, componentName, camera, clientX, clientY);
 
+      draggedElement = element;
+
       if (element) {
         // Can only drag one item at a time, so no need to check if any
         // listener is already set up
@@ -469,8 +471,6 @@ const {didMount, didUnmount} = (function getDidMountAndUnmount() {
             clientY,
           }
         );
-
-        draggedElement = element;
 
         dragInfo = {
           offset: {x: offset.x, y: offset.y, z: offset.z},

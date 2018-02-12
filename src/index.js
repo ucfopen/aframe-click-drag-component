@@ -451,9 +451,13 @@ const {didMount, didUnmount} = (function getDidMountAndUnmount() {
       });
     }
 
-    function onMouseDown({clientX, clientY}) {
+    function onMouseDown({clientX, clientY, defaultPrevented}) {
 
       const {depth, offset, element} = selectItem(THREE, componentName, camera, clientX, clientY);
+
+      if (defaultPrevented) {
+        return draggedElement = null;
+      }
 
       if (element) {
         // Can only drag one item at a time, so no need to check if any

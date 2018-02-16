@@ -423,6 +423,7 @@ const {didMount, didUnmount} = (function getDidMountAndUnmount() {
   let removeClickListeners;
   let removeDragListeners;
   const cache = [];
+  var skipFlag = false;
 
   function initialize(THREE, componentName) {
 
@@ -451,12 +452,20 @@ const {didMount, didUnmount} = (function getDidMountAndUnmount() {
       });
     }
 
-    function onMouseDown({clientX, clientY, defaultPrevented}) {
+    function onMouseDown({clientX, clientY, defaultPrevented, detail}) {
 
       const {depth, offset, element} = selectItem(THREE, componentName, camera, clientX, clientY);
 
-      if (defaultPrevented) {
-        return draggedElement = null;
+      var attributes = (detail && detail.target) ? detail.target.attributes : null;
+      if (attributes) {
+        if (!attributes.getNamedItem("click-drag")) {
+          skipFlag = true;
+        }
+        return;
+      }
+      else if (defaultPrevented || skipFlag) {
+        skipFlag = false;
+        return;
       }
 
       if (element) {
